@@ -1,0 +1,49 @@
+---
+- name: Configuración inicial de servidores
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: Actualizar cache de software de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Instalar cowsay
+      apt:
+        name: cowsay
+        state: present
+
+    - name: Crear un archivo en /tmp
+      file:
+        path: /tmp/hola.txt
+        state: touch
+
+    - name: Copiar archivos locales al servidor
+      copy:
+        src: archivos_locales/
+        dest: /tmp/
+
+    - name: Crear carpetas
+      file:
+        path: /tmp/carpeta1
+        state: directory
+
+    - name: Iniciar servicio de Apache
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Agregar usuario al servidor
+      user:
+        name: nuevo_usuario
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Ejecutar script en el servidor
+      script: /ruta/al/script.sh
